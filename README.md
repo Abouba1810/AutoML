@@ -113,7 +113,7 @@ source .venv/bin/activate
 ## 3. Install dependencies
 
 ```bash
-pip install flask pandas scikit-learn
+pip -r install requirements
 ```
 
 ---
