@@ -82,24 +82,9 @@ def process_data(file, trainingRatio, testingRatio, features, target, taskType):
         if feature.strip()
     ]
 
-
-    # =========================
-    # Nettoyer target
-    # =========================
-
     target = target.strip()
 
-
-    # =========================
-    # Lire le CSV
-    # =========================
-
     df = pd.read_csv(file)
-
-
-    # =========================
-    # Vérifier les features
-    # =========================
 
     for feature in features:
 
@@ -109,11 +94,6 @@ def process_data(file, trainingRatio, testingRatio, features, target, taskType):
                 'message': f'Feature "{feature}" not found in CSV.'
             }), 400
 
-
-    # =========================
-    # Vérifier target
-    # =========================
-
     if target not in df.columns:
 
         return jsonify({
@@ -121,17 +101,8 @@ def process_data(file, trainingRatio, testingRatio, features, target, taskType):
         }), 400
 
 
-    # =========================
-    # Créer X et y
-    # =========================
-
     X = df[features]
     y = df[target]
-
-
-    # =========================
-    # Affichage terminal
-    # =========================
 
     print("\n========== DATA ==========")
 
