@@ -188,7 +188,7 @@ def train_model(X, y, trainingRatio, testingRatio, taskType):
     elif taskType == 'classification':
         # Implement classification model training here
         from sklearn.ensemble import RandomForestClassifier
-        model = RandomForestClassifier()
+        model = RandomForestClassifier(random_state=42)
         model.fit(X_train, y_train)
         ypred = model.predict(X_test)
         return {
@@ -211,13 +211,13 @@ def evaluate_model(y_test, ypred,taskType):
         from sklearn.metrics import mean_squared_error, r2_score
         mse = mean_squared_error(y_test, ypred)
         r2 = r2_score(y_test, ypred)
-        if math.isnan(r):
-            r=None
+        if math.isnan(r2):
+            r2=None
         if math.isnan(mse):
             mse=None
         return {
-            "mse": float(mse),
-            "r2": float(r2)
+            "mse": float(mse) if mse is not None else None,
+            "r2": float(r2) if r2 is not None else None
         }
 if __name__ == '__main__':
     app.run(debug=True)
