@@ -20,11 +20,11 @@
     <label for="trainingRatio">Training Ratio:</label>
     <br>
     <br>
-    <input size="100" type="number" name="Ratio Train" id="trainingRatio" placeholder="Enter training ratio" step="0.01" min="0" max="1"  style="width: 180px;">
+    <input size="100" type="number" name="Ratio Train" id="trainingRatio" placeholder="Enter training ratio" step="0.1" min="0" max="1"  style="width: 150px;">
     <label for="testingRatio">Testing Ratio:</label>
     <br>
     <br>
-    <input size="100" type="number" name="Ratio Test" id="testingRatio" placeholder="Enter testing ratio" step="0.01" min="0" max="1" style="width: 180px;">
+    <input size="100" type="number" name="Ratio Test" id="testingRatio" placeholder="Enter testing ratio" step="0.1" min="0" max="1" style="width: 150px;">
     <br>
     <br>
     <label for="features">Features</label>
@@ -42,5 +42,4 @@
     <em >the ratios should add up to 1 </em>
     <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
-
 </html>

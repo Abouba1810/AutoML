@@ -3,6 +3,7 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
 import math
+from sklearn.preprocessing import LabelEncoder,StandardScaler
 app = Flask(__name__)
 
 
@@ -50,7 +51,10 @@ def upload_file():
         taskType
     )
 
-
+def what_type_of_data(df:pd.DataFrame):
+    num_cols=df.select_dtypes(include='number').columns.tolist()
+    cat_cols=df.select_dtypes(exclude='number').columns.tolist()
+    return num_cols,cat_cols
 def process_data(file, trainingRatio, testingRatio, features, target, taskType):
 
     # =========================
@@ -103,7 +107,6 @@ def process_data(file, trainingRatio, testingRatio, features, target, taskType):
 
     X = df[features]
     y = df[target]
-
     print("\n========== DATA ==========")
 
     print("Training ratio:", trainingRatio)
@@ -170,12 +173,19 @@ def process_data(file, trainingRatio, testingRatio, features, target, taskType):
 
     }), 200
     
-
 def train_model(X, y, trainingRatio, testingRatio, taskType):
     # Placeholder for model training logic
     # You can implement your model training here using libraries like scikit-learn, TensorFlow, etc.
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=testingRatio, random_state=42)
     # Example: Train a simple model (e.g., Linear Regression)
+    num_cols,cat_cols=what_type_of_data(X)
+    sc=StandardScaler()
+    le=LabelEncoder()
+    X_train[num_cols]=sc.fit_transform(X_train[num_cols])
+    X_test[num_cols]=sc.transform(X_test[num_cols])
+    # for col in cat_cols:
+    #     X_train[col]=le.fit_transform(X_train[col])
+    #     X_test[col]=le.transform(X_train[col])
     if taskType == 'regression':
         model = LinearRegression()
         model.fit(X_train, y_train)
@@ -187,10 +197,11 @@ def train_model(X, y, trainingRatio, testingRatio, taskType):
         }
     elif taskType == 'classification':
         # Implement classification model training here
-        from sklearn.ensemble import RandomForestClassifier
-        model = RandomForestClassifier(random_state=42)
+        y_train=le.fit_transform(y_train)
+        from sklearn.ensemble import GradientBoostingClassifier
+        model = GradientBoostingClassifier(random_state=42)
         model.fit(X_train, y_train)
-        ypred = model.predict(X_test)
+        ypred = le.inverse_transform(model.predict(X_test))
         return {
             "model": model,
             "y_test": y_test,
