@@ -14,7 +14,7 @@ A local web-based machine learning platform that allows users to upload a CSV da
 - [Project Structure](#project-structure)
 - [Installation](#installation)
   - [Clone the repository](#1-clone-the-repository)
-  - [Create a virtual environment](#2-create-a-virtual-environment)
+  - [Create a virtual environment (Optional)](#2-create-a-virtual-environment-optional)
   - [Install dependencies](#3-install-dependencies)
 - [How to Run](#how-to-run)
 - [How to Use](#how-to-use)
@@ -24,6 +24,10 @@ A local web-based machine learning platform that allows users to upload a CSV da
   - [Select the features](#4-select-the-features)
   - [Select the target](#5-select-the-target)
   - [Select the task type](#6-select-the-task-type)
+  - [Train the model](#7-train-the-model)
+- [Results](#results)
+- [Future Improvements](#future-improvements)
+- [Author](#author)
 
 ---
 
@@ -94,6 +98,7 @@ Evaluation:
 AutoML/
 │
 ├── main.py
+│
 ├── templates/
 │   └── index.html
 │
