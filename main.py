@@ -129,6 +129,11 @@ def process_data(file, trainingRatio, testingRatio, features, target, taskType):
     y_test = result["y_test"]
 
     predictions = result["predictions"]
+    submission = pd.DataFrame({
+        target: predictions
+    })
+
+    submission_preview = submission.head(10).to_dict(orient='records')
 
 
     # =========================
@@ -171,7 +176,8 @@ def process_data(file, trainingRatio, testingRatio, features, target, taskType):
 
         'model': type(model).__name__,
 
-        'metrics': metrics
+        'metrics': metrics,
+        'submission_preview': submission_preview
 
     }), 200
     

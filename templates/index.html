@@ -1,45 +1,201 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>AutoML</title>
-    
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-</head>
-<body>
-    <input type="file" id="fileInput" accept=".csv">
-    <br>
-    <button id="uploadButton">Upload CSV</button>
-    <br>
 
-    <p id="message"></p>
-
-    <div id="results"></div>
-    <br>
-    <label for="trainingRatio">Training Ratio:</label>
-    <br>
-    <br>
-    <input size="100" type="number" name="Ratio Train" id="trainingRatio" placeholder="Enter training ratio" step="0.1" min="0" max="1"  style="width: 150px;">
-    <label for="testingRatio">Testing Ratio:</label>
-    <br>
-    <br>
-    <input size="100" type="number" name="Ratio Test" id="testingRatio" placeholder="Enter testing ratio" step="0.1" min="0" max="1" style="width: 150px;">
-    <br>
-    <br>
-    <label for="features">Features</label>
-    <input
-        type="text"
-        id="features"
-        placeholder= "age, income, height, weight"
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='style.css') }}"
     >
+</head>
 
-    <label for="target">Target</label>
-    <input type="text" id="target" placeholder="target">
-    <label for="taskType">Type of Task</label>
-    <input type="text" id="taskType" placeholder="e.g., classification, regression">
-    <br>
-    <em >the ratios should add up to 1 </em>
-    <script src="{{ url_for('static', filename='script.js') }}"></script>
+<body>
+
+    <main class="container">
+
+        <!-- HEADER -->
+
+        <header class="header">
+
+            <h1>AutoML</h1>
+
+            <p>
+                Train and evaluate a machine learning model from your CSV.
+            </p>
+
+        </header>
+
+
+        <!-- CONFIGURATION CARD -->
+
+        <section class="card">
+
+            <h2>Dataset & Configuration</h2>
+
+            <!-- CSV -->
+
+            <div class="form-group">
+
+                <label for="fileInput">
+                    CSV Dataset
+                </label>
+
+                <input
+                    type="file"
+                    id="fileInput"
+                    accept=".csv"
+                >
+
+                <small>
+                    Upload the CSV file you want to use.
+                </small>
+
+            </div>
+
+
+            <!-- RATIOS -->
+
+            <div class="form-row">
+
+                <div class="form-group">
+
+                    <label for="trainingRatio">
+                        Training Ratio
+                    </label>
+
+                    <input
+                        type="number"
+                        id="trainingRatio"
+                        placeholder="0.8"
+                        step="0.1"
+                        min="0"
+                        max="1"
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="testingRatio">
+                        Testing Ratio
+                    </label>
+
+                    <input
+                        type="number"
+                        id="testingRatio"
+                        placeholder="0.2"
+                        step="0.1"
+                        min="0"
+                        max="1"
+                    >
+
+                </div>
+
+            </div>
+
+            <p class="hint">
+                Training and testing ratios must add up to 1.
+            </p>
+
+
+            <!-- FEATURES -->
+
+            <div class="form-group">
+
+                <label for="features">
+                    Features
+                </label>
+
+                <input
+                    type="text"
+                    id="features"
+                    placeholder="age, income, height, weight"
+                >
+
+                <small>
+                    Separate multiple features with commas.
+                </small>
+
+            </div>
+
+
+            <!-- TARGET -->
+
+            <div class="form-group">
+
+                <label for="target">
+                    Target
+                </label>
+
+                <input
+                    type="text"
+                    id="target"
+                    placeholder="target"
+                >
+
+            </div>
+
+
+            <!-- TASK -->
+
+            <div class="form-group">
+
+                <label for="taskType">
+                    Task Type
+                </label>
+
+                <select id="taskType">
+
+                    <option value="">
+                        Select task type
+                    </option>
+
+                    <option value="classification">
+                        Classification
+                    </option>
+
+                    <option value="regression">
+                        Regression
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <!-- BUTTON -->
+
+            <button
+                id="uploadButton"
+                type="button"
+            >
+                Train Model
+            </button>
+
+
+            <!-- MESSAGE -->
+
+            <p id="message"></p>
+
+        </section>
+
+
+        <!-- RESULTS -->
+
+        <section id="results"></section>
+
+    </main>
+
+
+    <script
+        src="{{ url_for('static', filename='script.js') }}"
+    ></script>
+
 </body>
+
 </html>

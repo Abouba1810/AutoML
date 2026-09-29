@@ -11,6 +11,8 @@ const button = document.querySelector('#uploadButton');
 const msg = document.querySelector('#message');
 
 const results = document.querySelector('#results');
+
+
 button.addEventListener('click', async function () {
 
     const file = fileInput.files[0];
@@ -116,12 +118,93 @@ button.addEventListener('click', async function () {
 
         msg.textContent = data.message;
 
+
+        // ==========================================
+        // SUBMISSION PREVIEW
+        // ==========================================
+
+        let submissionPreview = "";
+
+        if (
+            data.submission_preview &&
+            data.submission_preview.length > 0
+        ) {
+
+            const columns = Object.keys(
+                data.submission_preview[0]
+            );
+
+
+            submissionPreview = `
+                <div class="result-section">
+
+                    <h3>Submission Preview</h3>
+
+                    <div class="table-container">
+
+                        <table class="submission-table">
+
+                            <thead>
+                                <tr>
+
+                                    ${columns.map(column => `
+                                        <th>${column}</th>
+                                    `).join('')}
+
+                                </tr>
+                            </thead>
+
+
+                            <tbody>
+
+                                ${data.submission_preview.map(row => `
+                                    <tr>
+
+                                        ${columns.map(column => `
+                                            <td>${row[column]}</td>
+                                        `).join('')}
+
+                                    </tr>
+                                `).join('')}
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+            `;
+
+        } else {
+
+            submissionPreview = `
+                <div class="result-section">
+
+                    <h3>Submission Preview</h3>
+
+                    <p>No submission preview available.</p>
+
+                </div>
+            `;
+        }
+
+
+        // ==========================================
+        // AFFICHAGE DES RÉSULTATS
+        // ==========================================
+
         results.innerHTML = `
+
             <div class="results-card">
 
                 <h2>Model Results</h2>
 
+
+                <!-- DATASET -->
+
                 <div class="result-section">
+
                     <h3>Dataset</h3>
 
                     <p>
@@ -143,9 +226,14 @@ button.addEventListener('click', async function () {
                         <strong>Target:</strong>
                         ${data.target}
                     </p>
+
                 </div>
 
+
+                <!-- TRAINING CONFIGURATION -->
+
                 <div class="result-section">
+
                     <h3>Training Configuration</h3>
 
                     <p>
@@ -167,9 +255,14 @@ button.addEventListener('click', async function () {
                         <strong>Testing:</strong>
                         ${data.testingRatio}
                     </p>
+
                 </div>
 
+
+                <!-- METRICS -->
+
                 <div class="result-section">
+
                     <h3>Metrics</h3>
 
                     ${
@@ -177,38 +270,62 @@ button.addEventListener('click', async function () {
                         ?
                         `
                         <div class="metric">
+
                             <span>Accuracy</span>
+
                             <strong>
                                 ${(data.metrics.accuracy * 100).toFixed(2)}%
                             </strong>
+
                         </div>
                         `
                         :
                         `
                         <div class="metric">
+
                             <span>MSE</span>
+
                             <strong>
-                                ${data.metrics.mse.toFixed(4)}
+                                ${
+                                    data.metrics.mse !== null
+                                    ? data.metrics.mse.toFixed(4)
+                                    : "Not available"
+                                }
                             </strong>
+
                         </div>
 
+
                         <div class="metric">
+
                             <span>R²</span>
+
                             <strong>
+
                                 ${
                                     data.metrics.r2 !== null
                                     ? data.metrics.r2.toFixed(4)
                                     : "Not available"
                                 }
+
                             </strong>
+
                         </div>
                         `
                     }
 
                 </div>
 
+
+                <!-- SUBMISSION PREVIEW -->
+
+                ${submissionPreview}
+
+
             </div>
+
         `;
+
 
         console.log("Server response:", data);
 
