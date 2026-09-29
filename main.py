@@ -3,9 +3,11 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
 import math
-from sklearn.preprocessing import LabelEncoder,StandardScaler
+from sklearn.preprocessing import LabelEncoder, StandardScaler, OneHotEncoder
+from sklearn.compose import ColumnTransformer
+from sklearn.pipeline import Pipeline
 app = Flask(__name__)
-
+from sklearn.ensemble import GradientBoostingClassifier
 
 @app.route('/')
 def home():
@@ -174,38 +176,71 @@ def process_data(file, trainingRatio, testingRatio, features, target, taskType):
     }), 200
     
 def train_model(X, y, trainingRatio, testingRatio, taskType):
-    # Placeholder for model training logic
-    # You can implement your model training here using libraries like scikit-learn, TensorFlow, etc.
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=testingRatio, random_state=42)
-    # Example: Train a simple model (e.g., Linear Regression)
-    num_cols,cat_cols=what_type_of_data(X)
-    sc=StandardScaler()
-    le=LabelEncoder()
-    X_train[num_cols]=sc.fit_transform(X_train[num_cols])
-    X_test[num_cols]=sc.transform(X_test[num_cols])
-    # for col in cat_cols:
-    #     X_train[col]=le.fit_transform(X_train[col])
-    #     X_test[col]=le.transform(X_train[col])
+    
+    X_train, X_test, y_train, y_test = train_test_split(
+        X,
+        y,
+        test_size=testingRatio,
+        random_state=42
+    )
+
+    # Identifier les colonnes
+    num_cols, cat_cols = what_type_of_data(X)
+
+    # Préprocessing
+    preprocessor = ColumnTransformer(
+        transformers=[
+            ('num', StandardScaler(), num_cols),
+            ('cat', OneHotEncoder(handle_unknown='ignore'), cat_cols)
+        ]
+    )
+
+    # =========================
+    # REGRESSION
+    # =========================
+
     if taskType == 'regression':
-        model = LinearRegression()
+
+        model = Pipeline([
+            ('preprocessor', preprocessor),
+            ('model', LinearRegression())
+        ])
+
         model.fit(X_train, y_train)
+
         ypred = model.predict(X_test)
+
         return {
             'model': model,
             'y_test': y_test,
             'predictions': ypred
         }
+
+    # =========================
+    # CLASSIFICATION
+    # =========================
+
     elif taskType == 'classification':
-        # Implement classification model training here
-        y_train=le.fit_transform(y_train)
-        from sklearn.ensemble import GradientBoostingClassifier
-        model = GradientBoostingClassifier(random_state=42)
-        model.fit(X_train, y_train)
-        ypred = le.inverse_transform(model.predict(X_test))
+
+        le = LabelEncoder()
+
+        y_train_encoded = le.fit_transform(y_train)
+
+        model = Pipeline([
+            ('preprocessor', preprocessor),
+            ('model', GradientBoostingClassifier(random_state=42))
+        ])
+
+        model.fit(X_train, y_train_encoded)
+
+        ypred_encoded = model.predict(X_test)
+
+        ypred = le.inverse_transform(ypred_encoded)
+
         return {
-            "model": model,
-            "y_test": y_test,
-            "predictions": ypred
+            'model': model,
+            'y_test': y_test,
+            'predictions': ypred
         }
 def evaluate_model(y_test, ypred,taskType):
     # Placeholder for model evaluation logic
